@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sm.nhetu:nhetu-api:1.5.12-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/nhetu/nhetu-api/1.5.12-SNAPSHOT/nhetu-api-1.5.12-20200509.103929-8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/nhetu/nhetu-api/1.5.12-SNAPSHOT/nhetu-api-1.5.12-20200509.103929-8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/nhetu/nhetu-api/1.5.12-SNAPSHOT/nhetu-api-1.5.12-20200509.103929-8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sm.cpc:oss-cli:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/cpc/oss-cli/1.0.0-SNAPSHOT/oss-cli-1.0.0-20181226.072641-37.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/cpc/oss-cli/1.0.0-SNAPSHOT/oss-cli-1.0.0-20181226.072641-37-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/cpc/oss-cli/1.0.0-SNAPSHOT/oss-cli-1.0.0-20181226.072641-37-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

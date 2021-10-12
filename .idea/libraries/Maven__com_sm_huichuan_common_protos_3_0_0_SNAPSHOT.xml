@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sm.huichuan:common-protos:3.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/huichuan/common-protos/3.0.0-SNAPSHOT/common-protos-3.0.0-20210806.145811-35.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/huichuan/common-protos/3.0.0-SNAPSHOT/common-protos-3.0.0-20210806.145811-35-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/huichuan/common-protos/3.0.0-SNAPSHOT/common-protos-3.0.0-20210806.145811-35-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

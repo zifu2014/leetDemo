@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sm.huichuan:common-utils:2.0.3-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/huichuan/common-utils/2.0.3-SNAPSHOT/common-utils-2.0.3-20210823.131047-5.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/huichuan/common-utils/2.0.3-SNAPSHOT/common-utils-2.0.3-20210823.131047-5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sm/huichuan/common-utils/2.0.3-SNAPSHOT/common-utils-2.0.3-20210823.131047-5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
