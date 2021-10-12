@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.zifu</groupId>
+  <artifactId>demoWan</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>sort</module>
+  </modules>
+
+  <repositories>
+    <repository>
+      <id>shenma-nexus</id>
+      <url>http://mvnrepo.alibaba-inc.com/nexus/content/groups/public</url>
+    </repository>
+  </repositories>
+
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>http://imp-repo.alibaba.net/nexus/content/repositories/subreleases</url>
+    </repository>
+    <snapshotRepository>
+      <id>shenma</id>
+      <name>scm's snapshot Releases</name>
+      <url>http://imp-repo.alibaba.net/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <properties>
+    <spring.boot.dependencies.version>2.0.4.RELEASE</spring.boot.dependencies.version>
+    <spring.cloud.dependencies.version>Finchley.SR1</spring.cloud.dependencies.version>
+    <spring-boot-starter-test.version>2.0.4.RELEASE</spring-boot-starter-test.version>
+    <huichuan.base.dependencies.version>1.0.0-SNAPSHOT</huichuan.base.dependencies.version>
+    <huichuan.sencod.party.libs.version>0.0.1-SNAPSHOT</huichuan.sencod.party.libs.version>
+    <spring.boot.alibaba.security.version>2.0.0-SNAPSHOT</spring.boot.alibaba.security.version>
+    <!-- plugin的属性 -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.8</java.version>
+    <commons-math.version>3.2</commons-math.version>
+    <commons-protos.version>3.0.0-SNAPSHOT</commons-protos.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring.cloud.dependencies.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring.boot.dependencies.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring-boot-starter-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.sm.huichuan</groupId>
+        <artifactId>huichuan-base-dependencies</artifactId>
+        <version>${huichuan.base.dependencies.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.sm.huichuan</groupId>
+        <artifactId>second-party-libs</artifactId>
+        <version>${huichuan.sencod.party.libs.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-math3</artifactId>
+        <version>${commons-math.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sm.huichuan</groupId>
+        <artifactId>common-protos</artifactId>
+        <version>${commons-protos.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <!-- 插件配置 -->
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- compiler插件, 设定JDK版本 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.2</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <showWarnings>true</showWarnings>
+          </configuration>
+        </plugin>
+
+        <!-- resource插件 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+
+        <!-- test插件, 仅测试名称为*Test的类, 使用支持分组测试的surefire-junit47 driver -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.18</version>
+          <configuration>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+          </configuration>
+        </plugin>
+
+        <!-- jar打包相关插件 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+
+        <!-- clean插件 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.6.1</version>
+        </plugin>
+
+        <!-- install插件 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
