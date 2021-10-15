@@ -24,15 +24,15 @@ public class TreePreOrder {
    * 时间复杂度：O(n) 所有节点遍历一次
    * 空间复杂度：O(logn) logn 为树的高度
    *
-   * 虽然从时间复杂度来看，递归和迭代都是O(logn)，但是这里的常系数相差甚大
+   * 虽然从时间复杂度来看，递归和迭代都是O(N)，但是这里的常系数相差甚大
    * 迭代 显示栈的出入就是push pop，但是递归栈的出入就很重了
-   * 也就是说递归 O(a *Logn)，迭代是O(b*Logn)，这里的a>>b
+   * 也就是说递归 O(a * N)，迭代是O(b * N)，这里的a>>b
    */
   public static void preTraverse(TreeNode root) {
-    Stack<TreeNode> stack = new Stack<>();
     if (root == null) {
       return;
     }
+    Stack<TreeNode> stack = new Stack<>();
     stack.push(root);
     while (!stack.isEmpty()) {
       TreeNode tmp = stack.pop();
@@ -47,12 +47,12 @@ public class TreePreOrder {
   }
 
   /**
-   * Morris 遍历的核心思想是利用树的大量空闲指针，实现空间开销的极限缩减。其前序遍历规则总结如下：
-   * 新建临时节点，令该节点为 root；
-   * 如果当前节点的左子节点为空，将当前节点加入答案，并遍历当前节点的右子节点；
-   * 如果当前节点的左子节点不为空，在当前节点的左子树中找到当前节点在中序遍历下的前驱节点：
-   * 如果前驱节点的右子节点为空，将前驱节点的右子节点设置为当前节点。然后将当前节点加入答案，并将前驱节点的右子节点更新为当前节点。当前节点更新为当前节点的左子节点。
-   * 如果前驱节点的右子节点为当前节点，将它的右子节点重新设为空。当前节点更新为当前节点的右子节点。
+   * Morris 遍历的核心思想是利用树的大量空闲指针，实现空间开销的极限缩减
+   * 1 新建临时节点P1 = root；
+   * 2 如果P1.left为空，将P1加入答案，并P1 = P1.right；
+   * 3 如果P1.left不为空，在P1的左子树中找到最右叶子节点P2;
+   *    如果P2.right为空(没挂载过)，将P2.right=P1。然后将P1打印，之后P1=P1.left(这个逻辑分支前提是P1.left!=null)
+   *    如果P2.right == P1，将P2.right重新设为空(取消挂载)。P1更新为P1.right(第二次遍历了 转到右子树)。
    * 重复步骤 2 和步骤 3，直到遍历结束。
    * 这样我们利用 Morris 遍历的方法，前序遍历该二叉树，即可实现线性时间与常数空间的遍历。
    * @param root

@@ -52,9 +52,33 @@ public class TreeInOrder {
   }
 
   public static void morrisInTraverse(TreeNode root) {
-
+    if (root == null) {
+      return;
+    }
+    TreeNode p1 = root, p2 = null;
+    while (p1 != null) {
+      p2 = p1.left;
+      if (p2 != null) {
+        //找到左子树最右子节点
+        while (p2.right != null && p2.right != p1) {
+          p2 = p2.right;
+        }
+        //第一次则右节点直接挂载,且p1为其左子节点返回
+        if (p2.right == null) {
+          p2.right = p1;
+          p1 = p1.left;
+          continue;
+        } else {//第二次则输出中节点，并取消临时挂载
+          System.out.print(p2.right.val + " ");
+          p2.right = null;
+          p1 = p1.right;
+        }
+      } else {
+        System.out.print(p1.val + " ");
+        p1 = p1.right;
+      }
+    }
   }
-
 
   public static void main(String[] args) {
     TreeNode a = new TreeNode(5);
@@ -69,6 +93,6 @@ public class TreeInOrder {
     b.left = d;
     b.right = e;
     e.left = f;
-    inTraverse(a);
+    morrisInTraverse(a);
   }
 }

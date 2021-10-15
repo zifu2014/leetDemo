@@ -1,5 +1,6 @@
 package com.zifu.Tree;
 
+import com.zifu.Tree.TreeInOrder.TreeNode;
 import java.util.Stack;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,11 @@ public class TreePostOrder {
     }
   }
 
+  /**
+   * 主体流程和中序很像，区别就是加了一个Pre前缀
+   * 让所有有右子树的非叶子节点在其右节点之后才打印出来
+   * @param root
+   */
   public static void postInvarse(TreeNode root) {
     if (root == null) {
       return;
@@ -55,6 +61,37 @@ public class TreePostOrder {
     }
   }
 
+  /**
+   * 暂时不太清楚怎么搞 todo～
+   * @param root
+   */
+  public static void morrisPostTraverse(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+    TreeNode p1 = root, p2 = null;
+    while (p1 != null) {
+      p2 = p1.left;
+      if (p2 != null) {
+        while (p2.right != null && p2.right != p1) {
+          p2 = p2.right;
+        }
+        //第一次则右节点直接挂载,且p1为其左子节点返回
+        if (p2.right == null) {
+          p2.right = p1;
+          p1 = p1.left;
+          continue;
+        } else {//第二次则输出中节点，并取消临时挂载
+          System.out.print(p2.right.val + " ");
+          p2.right = null;
+          p1 = p1.right;
+        }
+      } else {
+        System.out.print(p1.val + " ");
+        p1 = p1.right;
+      }
+    }
+  }
 
   public static void main(String[] args) {
     TreeNode a = new TreeNode(5);
