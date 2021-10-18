@@ -96,19 +96,13 @@ public class TreePostOrder {
     }
   }
 
-  /**
-   * 思考哪里写错了
-   * 参考 https://www.cnblogs.com/anniekim/archive/2013/06/15/morristraversal.html
-   * @param start
-   * @param end
-   */
   private static void reverse(TreeNode start, TreeNode end) {
     if (start == end) {
       return;
     }
     TreeNode cur = start;
     TreeNode pre = null;
-    while (cur != end.right) {
+    while (pre != end) {
       TreeNode next = cur.right;
       cur.right = pre;
       pre = cur;
@@ -117,12 +111,12 @@ public class TreePostOrder {
   }
 
   private static void print(TreeNode start, TreeNode end) {
-    if (start == end) {
-      System.out.print(start.val + " ");
-    }
     TreeNode cur = start;
-    while (cur != end.right) {
+    while (true) {
       System.out.print(cur.val + " ");
+      if (cur == end) {
+        break;
+      }
       cur = cur.right;
     }
   }
@@ -141,5 +135,6 @@ public class TreePostOrder {
     b.right = e;
     e.left = f;
     morrisPostTraverse(a);
+//    postInvarse(a);
   }
 }
