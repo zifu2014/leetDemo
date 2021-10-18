@@ -21,8 +21,8 @@ public class TreePostOrder {
   }
 
   /**
-   * 主体流程和中序很像，区别就是加了一个Pre前缀
-   * 让所有有右子树的非叶子节点在其右节点之后才打印出来
+   * 主体流程和中序很像，区别就是加了一个Pre前缀 让所有有右子树的非叶子节点在其右节点之后才打印出来
+   *
    * @param root
    */
   public static void postInvarse(TreeNode root) {
@@ -62,34 +62,68 @@ public class TreePostOrder {
   }
 
   /**
-   * 暂时不太清楚怎么搞 todo～
+   * 大框架思路一样，不过需要额外的虚拟根节点dummy完成最后最上层的逆序输出 然后在节点第二次访问时(p2.right==p1),此时逆序输出p1.left->p2
+   *
    * @param root
    */
   public static void morrisPostTraverse(TreeNode root) {
     if (root == null) {
       return;
     }
-    TreeNode p1 = root, p2 = null;
+    TreeNode dummy = new TreeNode(-1);
+    dummy.left = root;
+    TreeNode p1 = dummy, p2 = null;
     while (p1 != null) {
       p2 = p1.left;
       if (p2 != null) {
         while (p2.right != null && p2.right != p1) {
           p2 = p2.right;
         }
-        //第一次则右节点直接挂载,且p1为其左子节点返回
         if (p2.right == null) {
           p2.right = p1;
           p1 = p1.left;
           continue;
-        } else {//第二次则输出中节点，并取消临时挂载
-          System.out.print(p2.right.val + " ");
+        } else {
+          reverse(p1.left, p2);
+          print(p2, p1.left);
+          reverse(p2, p1.left);
           p2.right = null;
           p1 = p1.right;
         }
       } else {
-        System.out.print(p1.val + " ");
         p1 = p1.right;
       }
+    }
+  }
+
+  /**
+   * 思考哪里写错了
+   * 参考 https://www.cnblogs.com/anniekim/archive/2013/06/15/morristraversal.html
+   * @param start
+   * @param end
+   */
+  private static void reverse(TreeNode start, TreeNode end) {
+    if (start == end) {
+      return;
+    }
+    TreeNode cur = start;
+    TreeNode pre = null;
+    while (cur != end.right) {
+      TreeNode next = cur.right;
+      cur.right = pre;
+      pre = cur;
+      cur = next;
+    }
+  }
+
+  private static void print(TreeNode start, TreeNode end) {
+    if (start == end) {
+      System.out.print(start.val + " ");
+    }
+    TreeNode cur = start;
+    while (cur != end.right) {
+      System.out.print(cur.val + " ");
+      cur = cur.right;
     }
   }
 
@@ -106,6 +140,6 @@ public class TreePostOrder {
     b.left = d;
     b.right = e;
     e.left = f;
-    postInvarse(a);
+    morrisPostTraverse(a);
   }
 }
