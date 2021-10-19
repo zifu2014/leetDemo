@@ -51,15 +51,49 @@ while (p1 != null) {
 
 BFS层序遍历（广度优先搜索）基于队列(Queue - LinkedList)完成，有很多题目都是基于BFS
 
-DFS中序遍历二叉搜索树结果为升序：二叉搜索树很多题目都跟这个特性有关
+DFS中序遍历二叉搜索树结果为升序：树很多题目都跟这个特性有关
+
 另外要注意递归特性是每次拿到左右两部分和cur，迭代能拿到pre和cur
 譬如验证二叉搜索树，迭代要用中序，递归要用后序
 有很多算法必须用迭代DFS，所以一定要掌握三种迭代模式
 
-1 验证二叉搜索树(中序迭代 or 后序递归 特点是node大于所有左子树节点 小于所有右子树节点)
-2 恢复二叉搜索树(O(1)用莫里斯)
-3 前序+中序 或 后序+中序 遍历结果 构造二叉树
-(递归 注意参数为两数组和各自下标(start,end)，可不是每次新创建子数组，每次都重新算length)
-4 生序数组或链表构造二叉搜索树
+二叉搜索树 增删和查找性能都不错，相比于增删厉害、查找厉害的数组 它的应用非常广泛
+
+题目思路简答：
+=================二叉树遍历(DFS or BFS)===================================================
+98  验证二叉搜索树
+  (迭代[pre>cur return false] or 递归[cur > min or cur < max return false])
+
+99  恢复二叉搜索树
+  找到错位的两节点(x,y)[通过中序遍历发现不满足升序的节点，最后swap(x,y)]
+  (O(logN)用迭代，要求O(1)空间复杂度用莫里斯)
+
+102 层序遍历-要求List<List<Integer>>逐层打印
+  无非就是每次while(!queue.isEmpty)循环开始先得到此时queue.size，然后for里add进list
+  for每个节点还是queue.add(left or right)
+
+103 层序遍历-要求List<List<Integer>>锯齿打印
+  相比逐层打印就是多加一个falg，要么从左到右，要么从右到左
+
+107 层序遍历-自底向上
+  框架思路一致，不过就是录入结果时不一样，要么最后reverse反转，要么依赖栈，再不行用双端队列每次从头部添加
+
+=================异构数据体构建二叉搜索树===================================================
+105、106 前序+中序 或 后序+中序 遍历结果 构造二叉搜索树
+TreeNode build(int[] a, int[] b, int a_left, int a_right, int b_left, int b_right) {
+  //a为前序遍历集index=a_left，后序遍历集就是a_right
+  TreeNode root = new TreeNode(a[index]);
+  //下面是前序，后序稍有不同但思路一样
+  int left_num 左子树节点数 = root在b的索引 - b_left;
+  root.left = build(a, b, a_left + 1, a_left + left_num, b_left, b_root - 1);
+  root.right = build(a, b, a_left + left_num + 1, a_right, b_root + 1, b_right);
+  return root;
+}
+
+108、109 升序数组或链表构造二叉搜索树
 (递归 数组用nums+start+end索引下标 中点=(start+end)/2 链表用left、right节点 中点=快慢指针所得)
+
+
+
+
 5 二叉树最小 最大 深度
