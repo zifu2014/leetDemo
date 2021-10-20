@@ -91,9 +91,25 @@ TreeNode build(int[] a, int[] b, int a_left, int a_right, int b_left, int b_righ
 }
 
 108、109 升序数组或链表构造二叉搜索树
-(递归 数组用nums+start+end索引下标 中点=(start+end)/2 链表用left、right节点 中点=快慢指针所得)
+  和上面很像，只不过没有另一种遍历集来限定二叉树固定样子
+  递归每次选取中间作为root，然后将左右两边集合交递归继续构建左右子树
+  (中点 数组=(start+end)/2 链表用快慢指针)
 
-
-
-
-5 二叉树最小 最大 深度
+112、113 路径总和
+给你root和targetSum，判断是否有 or 找出root到leaf路径总和==targetSum的路径
+判断是否有
+  public boolean hasPathSum(TreeNode root, int sum) {
+    if(root == null){
+      return false;
+    }
+    if(root.left == null && root.right == null){
+      return root.val == sum;
+    }
+    return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+  }
+列举所有路径
+  多维护全局两个变量
+  List<List<Integer>> ret = new LinkedList<List<Integer>>();
+  Deque<Integer> path = new LinkedList<Integer>();
+  每次递归 path.offerLast(cur) 当是叶子&&sum==0时 ret.add(path) 然后path.pollLast();
+  LinkedList是Deque和Queue的实现者 (Dqueue双端 Queue)
