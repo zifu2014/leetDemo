@@ -44,10 +44,8 @@ while (p1 != null) {
   }
 }
 
-
 空间复杂度是O(1), 但是时间复杂度却上升了不少(公式虽然是O(N) 但每个节点往往还涉及遍历左子树右侧
 尤其是后序遍历 还涉及链表反转这种操作 所以当对空间复杂度没有O(1)要求 我认为迭代最好 继而是莫里斯 最后是递归)
-
 
 BFS层序遍历（广度优先搜索）基于队列(Queue - LinkedList)完成，有很多题目都是基于BFS
 
@@ -95,6 +93,23 @@ TreeNode build(int[] a, int[] b, int a_left, int a_right, int b_left, int b_righ
   递归每次选取中间作为root，然后将左右两边集合交递归继续构建左右子树
   (中点 数组=(start+end)/2 链表用快慢指针)
 
+=================二叉搜索树体构建异构数据===================================================
+114 二叉树展成链表-节点还是TreeNode，right指向下一个结点，而left为null，且结构顺序同先序遍历
+  顾名思义使用先序排序，核心逻辑：
+  TreeNode dummy = new TreeNode(-1);
+  cur = dummy;
+  stack.pus(root);
+  while () {
+    node = stack.pop;
+    cur.right = node;
+    cur.left = null;
+    if () stack.push(right);
+    if () stack.push(left);
+    cur = node;
+  }
+  return dummy.right;
+
+=================遍历二叉搜索树节点 计算或记录或加工===================================================
 112、113 路径总和
 给你root和targetSum，判断是否有 or 找出root到leaf路径总和==targetSum的路径
 判断是否有
@@ -107,9 +122,244 @@ TreeNode build(int[] a, int[] b, int a_left, int a_right, int b_left, int b_righ
     }
     return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
   }
-列举所有路径
-  多维护全局两个变量
-  List<List<Integer>> ret = new LinkedList<List<Integer>>();
-  Deque<Integer> path = new LinkedList<Integer>();
-  每次递归 path.offerLast(cur) 当是叶子&&sum==0时 ret.add(path) 然后path.pollLast();
-  LinkedList是Deque和Queue的实现者 (Dqueue双端 Queue)
+  列举所有路径
+    多维护全局两个变量
+    List<List<Integer>> ret = new LinkedList<List<Integer>>();
+    Deque<Integer> path = new LinkedList<Integer>();
+    每次递归 path.offerLast(cur) 当是叶子&&sum==0时 ret.add(path) 然后path.pollLast();
+    LinkedList是Deque和Queue的实现者 (Dqueue双端 Queue)
+
+116 填充完美二叉树每个节点的next，指向平层下一个右侧节点，找不到设置为NULL
+  struct Node {
+    int val;
+    Node *left;
+    Node *right;
+    Node *next;
+  } --- 层序遍历，然后一层层for(i in (0->queue.size))处理 当i<size-1 node=queue.peek();
+  上面做法是通常意义上的层序遍历，时间复杂度是O(N),空间复杂度是O(M),N是总节点个数，M是最下面层级个数
+  完美二叉树：深度为k且有2^(k+1)-1个结点 (满二叉树)
+  完全二叉树：从根结点到倒数第二层满足完美二叉树，最后一层可以不完全填充，其叶子结点都靠左对齐
+
+  如果要求常量空间O(1)怎么整呢？不让常规队列完成关系串联，想到的就是利用其他指针
+  此题正好每个节点都多余了一个next，这样每次都可以在当前层(已串联好)将下一层所有节点串在一起(构造新链表)
+  核心思路就是利用已经成为链表的上一层为下一层节点构建成链表
+  二叉树遍历 前中后DFS 常规用栈、常量空间用莫里斯  层序BFS用队列，除非有next才能实现这种常量空间算法
+   public Node connect(Node root) {
+         if (root == null) return root;
+         Node cur = root;
+         while (cur != null) {
+             Node dummy = new Node(0); Node pre = dummy;
+             while (cur != null) {
+                 if (cur.left != null) {
+                     pre.next = cur.left; pre = pre.next;
+                 }
+                 if (cur.right != null) {
+                     pre.next = cur.right; pre = pre.next;
+                 }
+                 cur = cur.next;
+             }
+             cur = dummy.next;
+         }
+         return root;
+   }
+
+117 跟116比就是二叉树变为普通二叉树，上面两种算法都是通用的
+
+
+222 遍历树来统计节点个数 时间复杂度是O(n) 还能更快吗？
+这个降纬思路还挺有意思的：
+先请大家仔细看下完全二叉树会发现一个有趣的规律
+没错，左0右1 后缀到下一层，每一层位数比上一层多一个
+这样我们可以用二分查找快速确定某节点在不在了
+
+首先最左边直接下探得知h，而后得知可能的个数范围: 1<<h - (1<<h+1)-1，即low和high
+之后每次取可能范围的中点去查探(二分法)，exits(root,h,num)
+num我们看成二进制，通过同bits这种&最高位判断是0 or 1 得出这次要左下还是右下
+直到判断出num存不存在，然后返回上级作为下次判断范围基准，直到low==heigh，此时low就是真正的节点个数
+
+                                    节点个数范围:1<<h - (1<<h+1)-1
+              1(1)             h(0)            1-1
+            /     \
+      (10) 2       3(11)       h(1)            2-3
+         /   \   /      \
+ (100)4 (101) 5 6(110)  7(111) h(2)            4-7
+
+class Solution {
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int level = 0;
+        TreeNode node = root;
+        while (node.left != null) {
+            level++;
+            node = node.left;
+        }
+        int low = 1 << level, high = (1 << (level + 1)) - 1;
+        while (low < high) {
+            int mid = (high - low + 1) / 2 + low;
+            if (exists(root, level, mid)) {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return low;
+    }
+
+    public boolean exists(TreeNode root, int level, int k) {
+        int bits = 1 << (level - 1);
+        TreeNode node = root;
+        while (node != null && bits > 0) {
+            if ((bits & k) == 0) {
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+            bits >>= 1;
+        }
+        return node != null;
+    }
+}
+时间复杂度：最下层叶子的二分查找:O(logX) X为最下层节点个数 X=2^H H是树高
+每个节点查找需要从上到下也就是H，所以总体复杂度是O(H^2) -> O(logN*logN)
+当节点个数越老越大，复杂度差距会越来越明显，空间复杂度是O(1)
+
+
+230 查找二叉搜索树中第k个最小元素
+        首先选遍历方式，一看就是中序最合适，出栈的第K个节点就是结果，其时间复杂度取决树结构
+        时间复杂度：O(H+K) 当AVL H=logN 当链表时 H=N
+        空间复杂度 O(logN) <-> log(N) 栈最大深度
+进阶：如果需要频繁查找第k小值，如何优化算法？
+     这里树结构是不变的，所以我们预处理缓存信息投入产出比就是划算的
+     可以先遍历存储每个节点左右子节点数，然后就可以用二分查找法来完成
+
+     class MyBst {
+         TreeNode root;
+         Map<TreeNode, Integer> nodeNum;
+
+         public MyBst(TreeNode root) {
+             this.root = root;
+             this.nodeNum = new HashMap<TreeNode, Integer>();
+             countNodeNum(root);
+         }
+
+         public int kthSmallest(int k) {
+             TreeNode node = root;
+             while (node != null) {
+                 int left = getNodeNum(node.left);
+                 if (left < k - 1) {
+                     node = node.right;
+                     k -= left + 1;
+                 } else if (left == k - 1) {
+                     break;
+                 } else {
+                     node = node.left;
+                 }
+             }
+             return node.val;
+         }
+
+         private int countNodeNum(TreeNode node) {
+             if (node == null) {
+                 return 0;
+             }
+             nodeNum.put(node, 1 + countNodeNum(node.left) + countNodeNum(node.right));
+             return nodeNum.get(node);
+         }
+
+         private int getNodeNum(TreeNode node) {
+             return nodeNum.getOrDefault(node, 0);
+         }
+     }
+
+进阶：如果树经常被修改（插入/删除）且被频繁查找第k小值，如何优化算法？
+     AVL查找性能最优，当查找频繁，修改时动态维护AVL投入产出比就是划算的，所以就是动态维护AVL，查找还是中序DFS
+如何动态维护AVL？ 这个比较复杂，先搁置
+
+
+331 通过"9,3,4,#,#,1,#,#,2,#,6,#,#"验证它是否是正确的二叉树的前序序列化
+      9
+    /   \
+   3     2
+  / \   / \
+ 4   1  #  6
+/ \ / \   / \
+# # # #   # #   输出: true
+示例 2:  输入: "1,#"  输出: false
+
+前序序列特点：root-left-right 上面这种空节点为#方便我们做出度入度的核算
+正确树结构最后汇总一定是0(栈为空)，非空节点入度是1 出度是2 ， #空节点入度是1 出度是0
+我们用栈来缓存出入情况，如下所示：
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        int n = preorder.length(), i = 0;
+        Stack<Integer> stack = new LinkedList<Integer>();
+        stack.push(1);
+        while (i < n) {
+            if (stack.isEmpty()) return false;
+            if (preorder.charAt(i) == ',') {
+                i++;
+            } else if (preorder.charAt(i) == '#'){
+                int top = stack.pop() - 1;
+                if (top > 0) stack.push(top);
+                i++;
+            } else {
+                while (i < n && preorder.charAt(i) != ',') {
+                    i++;
+                }
+                int top = stack.pop() - 1;
+                if (top > 0) stack.push(top);
+                stack.push(2);
+            }
+        }
+        return stack.isEmpty();
+    }
+}
+
+
+449 序列化和反序列化二叉搜索树
+    public String serialize(TreeNode root) {}
+    public TreeNode deserialize(String data) {}
+
+    序列化非常简单，但要选择一个方便反序列化的遍历方式
+    通过序列化结果构造树，给你(preList+inList)或(postList+inList) 非常简单
+    但只给你preList或postList呢 -- inList是不可能的因为找不到root
+思路：第一个或最后一个是root，之后左半部分小于root.val的是左子树部分,右半部分为右子树
+    可别通过每次遍历来找到左右边界，想一下我们直接转为队列，若是preList接下来就是先构造left
+    每次都砍掉第一个元素慢慢销往的方法
+
+public StringBuilder postorder(TreeNode root, StringBuilder sb) {
+        if (root == null) return sb;
+        postorder(root.left, sb);
+        postorder(root.right, sb);
+        sb.append(root.val).append(' ');
+        return sb;
+    }
+
+    public String serialize(TreeNode root) {
+        StringBuilder sb = postorder(root, new StringBuilder());
+        if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    public TreeNode helper(Integer lower, Integer upper, ArrayDeque<Integer> nums) {
+        if (nums.isEmpty()) ，return null;
+        int val = nums.getLast();
+        if (val < lower || val > upper) return null;
+        nums.removeLast();
+        TreeNode root = new TreeNode(val);
+        root.right = helper(val, upper, nums);
+        root.left = helper(lower, val, nums);
+        return root;
+    }
+
+    public TreeNode deserialize(String data) {
+        if (data.isEmpty()) return null;
+        ArrayDeque<Integer> nums = new ArrayDeque<Integer>();
+        for (String s : data.split("\\s+"))
+            nums.add(Integer.valueOf(s));
+        return helper(Integer.MIN_VALUE, Integer.MAX_VALUE, nums);
+    }
+}
+
