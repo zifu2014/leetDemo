@@ -5,18 +5,15 @@ import com.sm.huichuan.common.utils.NewJsonUtils;
 public class InsertSort {
 
   public static void sort(int[] arrays) {
-    for (int i = 1; i < arrays.length; i++) {
-      int temp = arrays[i];
-      int j = i;
-      while (j - 1 >= 0) {
-        if (temp < arrays[j - 1]) {
-          arrays[j] = arrays[j - 1];
-          j = j - 1;
-        } else {
-          break;
-        }
+    int len = arrays.length;
+    for (int start = 1; start < len; start++) {
+      int cur = start - 1;
+      int tmp = arrays[start];
+      while (cur >= 0 && arrays[cur] > tmp) {
+        arrays[cur + 1] = arrays[cur];
+        cur--;
       }
-      arrays[j] = temp;
+      arrays[cur + 1] = tmp;
     }
   }
 

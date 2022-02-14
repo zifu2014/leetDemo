@@ -25,18 +25,8 @@ public class TreeInOrder {
     }
 
     Stack<TreeNode> stack = new Stack<>();
-    stack.push(root);
-
-    TreeNode cur = root.left;
+    TreeNode cur = root;
     while (cur != null || !stack.isEmpty()) {
-      /**
-       * 不能从stack peek出来判断左子树，否则会陷入无限循环
-       *       TreeNode tmp = stack.peek();
-       *       while (tmp.left != null) {
-       *         stack.push(tmp.left);
-       *         tmp = tmp.left;
-       *       }
-       */
       while (cur != null) {
         stack.push(cur);
         cur = cur.left;
@@ -44,10 +34,7 @@ public class TreeInOrder {
 
       TreeNode node = stack.pop();
       System.out.print(node.val + " ");
-
-      if (node.right != null) {
-        cur = node.right;
-      }
+      cur = node.right;
     }
   }
 
@@ -55,27 +42,25 @@ public class TreeInOrder {
     if (root == null) {
       return;
     }
-    TreeNode p1 = root, p2 = null;
-    while (p1 != null) {
-      p2 = p1.left;
-      if (p2 != null) {
-        //找到左子树最右子节点
-        while (p2.right != null && p2.right != p1) {
-          p2 = p2.right;
+
+    TreeNode cur = root;
+    while (cur != null) {
+      if (cur.left != null) {
+        TreeNode tmp = cur.left;
+        while (tmp.right != null && tmp.right != cur) {
+          tmp = tmp.right;
         }
-        //第一次则右节点直接挂载,且p1为其左子节点返回
-        if (p2.right == null) {
-          p2.right = p1;
-          p1 = p1.left;
-          continue;
-        } else {//第二次则输出中节点，并取消临时挂载
-          System.out.print(p2.right.val + " ");
-          p2.right = null;
-          p1 = p1.right;
+        if (tmp.right == cur) {
+          tmp.right = null;
+          System.out.print(cur.val + " ");
+          cur = cur.right;
+        } else {
+          tmp.right = cur;
+          cur = cur.left;
         }
       } else {
-        System.out.print(p1.val + " ");
-        p1 = p1.right;
+        System.out.print(cur.val + " ");
+        cur = cur.right;
       }
     }
   }

@@ -5,20 +5,20 @@ import com.sm.huichuan.common.utils.NewJsonUtils;
 public class ShellSort {
 
   public static void sort(int[] arrays) {
-    for (int n = arrays.length >> 1; n >= 1; n = n >> 1) {
-      for (int i = n; i < arrays.length; i++) {
-        int temp = arrays[i];
-        int j = i;
-        while (j - n >= 0) {
-          if (temp < arrays[j - n]) {
-            arrays[j] = arrays[j - n];
-            j = j - n;
-          } else {
-            break;
-          }
+    int len = arrays.length;
+    int step = len / 2;
+
+    while (step > 0) {
+      for (int start = step; start < len; start++) {
+        int cur = start - step;
+        int tmp = arrays[start];
+        while (cur >= 0 && arrays[cur] > tmp) {
+          arrays[cur + step] = arrays[cur];
+          cur = cur - step;
         }
-        arrays[j] = temp;
+        arrays[cur + step] = tmp;
       }
+      step = step / 2;
     }
   }
 

@@ -1,0 +1,2 @@
+SpringBoot各类Starter解放了程序员繁琐无聊的配置，直接用默认约定初始化
+官方提供了基础的redis、jdbc、mvc，其他第三方框架比如mybatis也自己搞了starter

@@ -1,5 +1,7 @@
 package com.zifu.Tree;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Stack;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,16 +34,17 @@ public class TreePreOrder {
     if (root == null) {
       return;
     }
-    Stack<TreeNode> stack = new Stack<>();
+    Deque<TreeNode> stack = new LinkedList<>();
     stack.push(root);
     while (!stack.isEmpty()) {
-      TreeNode tmp = stack.pop();
-      System.out.print(tmp.val + " ");
-      if (tmp.right != null) {
-        stack.push(tmp.right);
+      TreeNode cur = stack.pop();
+      System.out.print(cur.val + " ");
+
+      if (cur.right != null) {
+        stack.push(cur.right);
       }
-      if (tmp.left != null) {
-        stack.push(tmp.left);
+      if (cur.left != null) {
+        stack.push(cur.left);
       }
     }
   }
@@ -61,26 +64,25 @@ public class TreePreOrder {
     if (root == null) {
       return;
     }
-    
-    TreeNode p1 = root, p2;
-    while (p1 != null) {
-      p2 = p1.left;
-      if (p2 != null) {
-        while (p2.right != null && p2.right != p1) {
-          p2 = p2.right;
+
+    TreeNode cur = root;
+    while (cur != null) {
+      if (cur.left != null) {
+        TreeNode tmp = cur.left;
+        while (tmp.right != null && tmp.right != cur) {
+          tmp = tmp.right;
         }
-        if (p2.right == null) {
-          System.out.print(p1.val + " ");
-          p2.right = p1;
-          p1 = p1.left;
-          continue;
+        if (tmp.right == cur) {
+          tmp.right = null;
+          cur = cur.right;
         } else {
-          p2.right = null;
-          p1 = p1.right;
+          tmp.right = cur;
+          System.out.print(cur.val + " ");
+          cur = cur.left;
         }
       } else {
-        System.out.print(p1.val + " ");
-        p1 = p1.right;
+        System.out.print(cur.val + " ");
+         cur = cur.right;
       }
     }
   }
